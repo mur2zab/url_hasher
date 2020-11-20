@@ -17,27 +17,22 @@
 
   <div class="container">
     <div class="d-flex justify-content-center">
-      <input type="text" class="form-control" placeholder="Enter your URL here: " id="url" />
+      <label>Enter your URL here: </label>
+      <input type="text" class="form-control" id="url" value="http://" />
     </div>
     <br />
     <div class="d-flex justify-content-center">
-      <button type="button" class="btn btn-primary" onclick="generateHash()">Submit</button>
+      <button type="submit" class="btn btn-primary" onclick="generateHash()">Submit</button>
     </div>
+    <br/>
     <div class="d-flex justify-content-center ">
-      <h3 class="d-none" id="hashedUrl">Your hashed URL :</h3> 
+      <h5 class="d-none" id="hashedUrl">Your hashed URL :</h5>
     </div>
   </div>
-
-  <footer>
-    <div class="d-flex justify-content-center">
-      Developed by: <a href="https://www.linkedin.com/in/murtuza-bagasrawala-903b6a155/">Murtuza.B</a>
-    </div>
-  </footer>
 </body>
 
 <script>
   function generateHash() {
-
     let requestBody = {
       url: document.getElementById("url").value
     }
@@ -48,14 +43,20 @@
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(requestBody),
-    }).then((response) => response.json())
+    }).then(async (response) => {
+        if(!response.ok){
+          return response.text().then((error)=> {
+            throw error
+          })
+        }
+        return response.json()
+    })
       .then((data) => {
-        console.log('Success:', data);
-        document.getElementById("hashedUrl").innerHTML += data.hashedUrl 
+        document.getElementById("hashedUrl").innerHTML += `<a href=${data.hashedUrl}>${data.hashedUrl}</a>`
         document.getElementById("hashedUrl").className = "d-block"
       })
       .catch((error) => {
-        console.error('Error:', error);
+        alert(error)
       });
   }
 </script>
