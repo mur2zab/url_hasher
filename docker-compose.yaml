@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+  app:
+    build: .
+    command:  node index.js
+    network_mode: "host"
+    depends_on:
+      - "mongo"
+    ports: 
+      - 8000:8000
+  mongo:
+    container_name: mongo2
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
